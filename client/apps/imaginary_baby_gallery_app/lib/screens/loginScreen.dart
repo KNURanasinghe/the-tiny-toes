@@ -16,13 +16,12 @@ class _UserScreenState extends State<LoginScreen> {
   final userNameController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void onPressed() {
-    
+  void onPressed() async {
     final loginProvider = Provider.of<LoginProvider>(context, listen: false);
 
     if (userNameController.text.isNotEmpty &&
         passwordController.text.isNotEmpty) {
-      bool isLoggedIn = loginProvider.login(
+      bool isLoggedIn = await loginProvider.login(
         userNameController.text.trim(),
         passwordController.text.trim(),
       );
