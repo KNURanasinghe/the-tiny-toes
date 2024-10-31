@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:imaginary_baby_gallery_app/provider/user_provider.dart';
 import 'package:imaginary_baby_gallery_app/screens/loginScreen.dart';
 import 'package:imaginary_baby_gallery_app/screens/userScreen.dart';
 import 'package:provider/provider.dart';
@@ -8,12 +9,14 @@ import 'provider/authProvider.dart';
 
 void main() async{
     WidgetsFlutterBinding.ensureInitialized();
+    
   final prefs = await SharedPreferences.getInstance();
   final bool isLoggedIn = prefs.containsKey('username');
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => LoginProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child:  MyApp(isLoggedIn: isLoggedIn),
     ),
