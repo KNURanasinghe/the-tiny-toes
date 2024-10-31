@@ -86,9 +86,11 @@ class _UserScreenState extends State<LoginScreen> {
                       BorderRadius.circular(8), // Set desired radius here
                 ),
                 backgroundColor: const Color.fromARGB(255, 8, 53, 214)),
-            child: const Text(
-              "Submit",
-              style: TextStyle(fontSize: 16, color: Colors.white),
+            child: const Center(
+              child: Text(
+                "Submit",
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
             ),
           ),
         )

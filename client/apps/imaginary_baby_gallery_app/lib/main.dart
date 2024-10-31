@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:imaginary_baby_gallery_app/provider/album_provider.dart';
 import 'package:imaginary_baby_gallery_app/provider/user_provider.dart';
 import 'package:imaginary_baby_gallery_app/screens/loginScreen.dart';
 import 'package:imaginary_baby_gallery_app/screens/userScreen.dart';
@@ -7,9 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'provider/authProvider.dart';
 
-void main() async{
-    WidgetsFlutterBinding.ensureInitialized();
-    
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   final prefs = await SharedPreferences.getInstance();
   final bool isLoggedIn = prefs.containsKey('username');
   runApp(
@@ -17,8 +18,9 @@ void main() async{
       providers: [
         ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => AlbumProvider()),
       ],
-      child:  MyApp(isLoggedIn: isLoggedIn),
+      child: MyApp(isLoggedIn: isLoggedIn),
     ),
   );
 }
