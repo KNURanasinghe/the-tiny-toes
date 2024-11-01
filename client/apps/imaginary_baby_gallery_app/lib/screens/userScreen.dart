@@ -39,7 +39,7 @@ class _UserscreenState extends State<Userscreen> {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
-      appBar: CustomAppBar(onLogout: onPress),
+      appBar: CustomAppBar(onLogout: onPress,appBarTitle: "User",),
       body: userProvider.isLoading
           ? const Center(
               child: CircularProgressIndicator(),

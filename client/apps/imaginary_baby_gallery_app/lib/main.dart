@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:imaginary_baby_gallery_app/provider/album_provider.dart';
+import 'package:imaginary_baby_gallery_app/provider/gallery_provider.dart';
 import 'package:imaginary_baby_gallery_app/provider/user_provider.dart';
 import 'package:imaginary_baby_gallery_app/screens/loginScreen.dart';
 import 'package:imaginary_baby_gallery_app/screens/userScreen.dart';
@@ -19,6 +20,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => AlbumProvider()),
+        ChangeNotifierProvider(create: (_) => GalleryProvider()),
       ],
       child: MyApp(isLoggedIn: isLoggedIn),
     ),

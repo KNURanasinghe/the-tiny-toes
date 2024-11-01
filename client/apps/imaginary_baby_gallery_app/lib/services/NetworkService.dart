@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:imaginary_baby_gallery_app/models/gallery_model.dart';
 
 import '../models/albumModel.dart';
 import '../models/userModel.dart';
@@ -30,5 +31,15 @@ class NetworkService {
       throw Exception('Failed to load albums');
     }
 
+  }
+
+  Future <List<GalleryModel>> fetchGallery()async {
+    final response = await http.get(Uri.parse("${_baseUrl}photos"));
+    if(response.statusCode == 200){
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse.map((gallery) => GalleryModel.fromJson(gallery)).toList();
+    }else{
+      throw Exception('Failed to load gallery');
+    }
   }
 }

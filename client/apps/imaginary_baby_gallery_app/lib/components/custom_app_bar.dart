@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onLogout;
+  String appBarTitle;
 
-  const CustomAppBar({super.key, required this.onLogout});
+  CustomAppBar({super.key, required this.onLogout, required this.appBarTitle});
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +34,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
           ),
-          const Text(
-            "Users",
-            style: TextStyle(color: Colors.black), // Text color
+          Text(
+            appBarTitle,
+            style: const TextStyle(color: Colors.black), // Text color
           ),
           Row(
             children: [

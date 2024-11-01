@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:imaginary_baby_gallery_app/components/custom_app_bar.dart';
 import 'package:imaginary_baby_gallery_app/provider/authProvider.dart';
+import 'package:imaginary_baby_gallery_app/screens/gallery_page.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/album_provider.dart';
@@ -40,7 +41,10 @@ class _AlbumPageState extends State<AlbumPage> {
     print(filteredData);
 
     return Scaffold(
-      appBar: CustomAppBar(onLogout: onPress),
+      appBar: CustomAppBar(
+        onLogout: onPress,
+        appBarTitle: "Album",
+      ),
       body: Column(
         children: [
           const SizedBox(
@@ -55,62 +59,74 @@ class _AlbumPageState extends State<AlbumPage> {
           const SizedBox(
             height: 70,
           ),
-          SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: filteredData.length,
-                  itemBuilder: (context, index) {
-                    final album = filteredData[index];
-                    return Padding(
+          albumProvider.albums.isEmpty
+              ? const Center(child: CircularProgressIndicator())
+              : Expanded(
+                  child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          // Circular container for the letter
-                          Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: Colors
-                                  .grey[300], // Background color of the circle
-                              shape: BoxShape.circle,
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              album.title[0].toUpperCase(),
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: filteredData.length,
+                        itemBuilder: (context, index) {
+                          final album = filteredData[index];
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => GalleryPage(
+                                            id: albumProvider.albums[index].id,
+                                          )));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  // Circular container for the letter
+                                  Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[
+                                          300], // Background color of the circle
+                                      shape: BoxShape.circle,
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      album.title[0].toUpperCase(),
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  // Text container with rounded corners
+                                  Expanded(
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 15),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[
+                                            300], // Background color of the text container
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Text(
+                                        album.title,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 10),
-                          // Text container with rounded corners
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 15),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[
-                                    300], // Background color of the text container
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                album.title,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                )),
-          ),
+                          );
+                        },
+                      )),
+                ),
         ],
       ),
     );
