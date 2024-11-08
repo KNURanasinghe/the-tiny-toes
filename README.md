@@ -111,8 +111,8 @@ Here are the core dependencies used in this project:
 
 ## Contact
 
-For any questions or suggestions, please contact us at [your email address].
+For any questions or suggestions, please contact us at [nidarshanauthpala90@gmail.com].
 
----
 
-This README file covers all essential information about the structure, setup, and features of The Tiny Toes app. Enjoy exploring the project!
+
+
