@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:imaginary_baby_gallery_app/provider/authProvider.dart';
+import 'package:provider/provider.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onLogout;
@@ -8,10 +10,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<LoginProvider>(context);
+    final username = userProvider.username ?? "User";
     return AppBar(
       centerTitle: true,
-      backgroundColor: Colors.white, // Background color of AppBar
-      elevation: 0, // Remove default AppBar shadow
+      backgroundColor: Colors.white, 
+      elevation: 0, 
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -40,7 +44,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           Row(
             children: [
-              const Text("user"),
+               Text(username, style: TextStyle(fontSize: 15)),
               const SizedBox(width: 20),
               Container(
                 width: 50,
@@ -48,8 +52,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Colors.blue, // Circle outline color
-                    width: 3, // Circle outline width
+                    color: Colors.blue, 
+                    width: 3, 
                   ),
                 ),
                 child: CircleAvatar(

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../provider/album_provider.dart';
 import '../provider/user_provider.dart';
+import 'loginScreen.dart';
 
 class AlbumPage extends StatefulWidget {
   final int id;
@@ -27,7 +28,13 @@ class _AlbumPageState extends State<AlbumPage> {
 
   void onPress() async {
     final logoutProvider = Provider.of<LoginProvider>(context, listen: false);
+
     await logoutProvider.logout();
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    );
   }
 
   @override
@@ -57,7 +64,7 @@ class _AlbumPageState extends State<AlbumPage> {
             ),
           ),
           const SizedBox(
-            height: 70,
+            height: 50,
           ),
           albumProvider.albums.isEmpty
               ? const Center(child: CircularProgressIndicator())

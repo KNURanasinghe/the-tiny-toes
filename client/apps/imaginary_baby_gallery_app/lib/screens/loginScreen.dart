@@ -76,7 +76,7 @@ class _UserScreenState extends State<LoginScreen> {
         ),
         SizedBox(
           width: 200,
-          height: 40,
+          height: 60,
           child: ElevatedButton(
             onPressed: onPressed,
             style: ElevatedButton.styleFrom(

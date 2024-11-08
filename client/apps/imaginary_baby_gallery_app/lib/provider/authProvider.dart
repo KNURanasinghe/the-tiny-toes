@@ -2,25 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginProvider with ChangeNotifier {
-  final String _username = "Nidarshana";
-  final String _password = "123456";
+  final String _defaultUsername = "Nidarshana";
+  final String _defaultPassword = "123456";
   bool _isLoggedIn = false;
+  String? _username;
 
   bool get isLoggedIn => _isLoggedIn;
+  String? get username => _username;
 
-  // Method to check if user is already logged in
+ 
   Future<void> checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
-    _isLoggedIn = prefs.containsKey('username');
+    if (prefs.containsKey('username')) {
+      _isLoggedIn = true;
+      _username = prefs.getString('username');
+    } else {
+      _isLoggedIn = false;
+    }
     notifyListeners();
   }
 
-  // Login and save username in local storage if successful
+
   Future<bool> login(String username, String password) async {
-    if (username == _username && password == _password) {
+    if (username == _defaultUsername && password == _defaultPassword) {
       _isLoggedIn = true;
+      _username = username;
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('username', username); // Store username in storage
+      await prefs.setString('username', username); 
       notifyListeners();
       return true;
     } else {
@@ -30,11 +38,12 @@ class LoginProvider with ChangeNotifier {
     }
   }
 
-  // Logout and clear username from local storage
+ 
   Future<void> logout() async {
     _isLoggedIn = false;
+    _username = null;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('username'); // Remove username from storage
+    await prefs.remove('username'); 
     notifyListeners();
   }
 }

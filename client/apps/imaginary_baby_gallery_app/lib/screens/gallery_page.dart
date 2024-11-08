@@ -3,9 +3,10 @@ import 'package:imaginary_baby_gallery_app/components/custom_app_bar.dart';
 import 'package:imaginary_baby_gallery_app/provider/album_provider.dart';
 import 'package:imaginary_baby_gallery_app/provider/authProvider.dart';
 import 'package:imaginary_baby_gallery_app/provider/gallery_provider.dart';
+import 'package:imaginary_baby_gallery_app/screens/gallery_details.dart';
 import 'package:provider/provider.dart';
 
-import 'album_page.dart';
+import 'loginScreen.dart';
 
 class GalleryPage extends StatefulWidget {
   final int id;
@@ -22,15 +23,18 @@ class _GalleryPageState extends State<GalleryPage> {
     final galleryProvider =
         Provider.of<GalleryProvider>(context, listen: false);
     // Fetch photos for the specific album ID when the page loads
-    galleryProvider.fetchGallery().then((_) {
-      setState(() {}); // Update the UI after fetching data
-    });
+    galleryProvider.fetchGallery();
   }
 
-  void onpress() async {
-    final authProvider = Provider.of<LoginProvider>(context, listen: false);
+  void onPress() async {
+    final logoutProvider = Provider.of<LoginProvider>(context, listen: false);
 
-    await authProvider.logout();
+    await logoutProvider.logout();
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    );
   }
 
   @override
@@ -42,9 +46,12 @@ class _GalleryPageState extends State<GalleryPage> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    // Check if albums and gallery data are loaded and contain elements
     if (albumProvider.albums.isEmpty || galleryProvider.gallery.isEmpty) {
       return const Center(child: Text("No data available"));
+    }
+
+    if (widget.id - 1 >= albumProvider.albums.length) {
+      return const Center(child: Text("Album not found"));
     }
 
     final filteredData = galleryProvider.gallery
@@ -52,83 +59,88 @@ class _GalleryPageState extends State<GalleryPage> {
             gallery.albumId == albumProvider.albums[widget.id - 1].id)
         .toList();
 
-    print("filteredData: ${filteredData[widget.id - 1].thumbnailUrl}");
+    if (filteredData.isEmpty) {
+      return const Center(child: Text("No images available for this album"));
+    }
 
     return Scaffold(
       appBar: CustomAppBar(
         appBarTitle: "Gallery",
-        onLogout: onpress,
+        onLogout: onPress,
       ),
       body: Column(
         children: [
-          const SizedBox(
-            height: 70,
-          ),
+          const SizedBox(height: 20),
           Center(
             child: Text(
               albumProvider.albums[widget.id - 1].title.toString(),
-              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
           ),
-          const SizedBox(height: 50),
+          const SizedBox(height: 20),
           Expanded(
-            child: galleryProvider.isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GridView.builder(
-                      padding: const EdgeInsets.all(10.0),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 20,
-                        mainAxisSpacing: 20,
-                      ),
-                      itemCount: filteredData.length,
-                      itemBuilder: (context, index) {
-                        final photo = filteredData[index];
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AlbumPage(
-                                          id: widget.id,
-                                        )));
-                          },
-                          child: GridTile(
-                            footer: GridTileBar(
-                              title: Text(
-                                photo.title,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                style: const TextStyle(
-                                    fontSize: 14, color: Colors.black),
-                              ),
-                            ),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Image.network(
-                                photo.thumbnailUrl,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return const Icon(
-                                    Icons.broken_image,
-                                    size: 120,
-                                    color: Colors.grey,
-                                  ); // or replace with any local asset as a placeholder
-                                },
-                              ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount:
+                      2, // Adjusting to 2 columns to prevent overflow
+                  crossAxisSpacing: 15,
+                  mainAxisSpacing: 15,
+                ),
+                itemCount: filteredData.length,
+                itemBuilder: (context, index) {
+                  final photo = filteredData[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GalleryDetails(id: widget.id),
+                        ),
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 150,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10.0),
+                            child: Image.network(
+                              photo.thumbnailUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(
+                                  Icons.broken_image,
+                                  size: 80,
+                                  color: Colors.grey,
+                                );
+                              },
                             ),
                           ),
-                        );
-                      },
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          photo.title,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
-                  ),
+                  );
+                },
+              ),
+            ),
           ),
         ],
       ),
